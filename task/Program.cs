@@ -22,3 +22,69 @@ internal static class Program
 
     }
 }
+
+/*
+  ConcreteSubject - конкретный субъект:
+	 - сохраняет состояние, представляющее интерес для конкретного наблюдателя ConcreteObserver;
+	 - посылает информацию своим наблюдателям, когда происходит изменение;
+*/
+internal class ConcreteSubject : Subject
+{
+    private int _state;
+
+    public int State
+    {
+        get { return _state; }
+        set
+        {
+            _state = value;
+            Notify();
+        }
+    }
+}
+
+
+/*
+ ConcreteObserver - конкретный наблюдатель:
+	 - хранит ссылку на объект класса ConcreteSubject;
+	 - сохраняет данные, которые должны быть согласованы с данными субъекта;
+	 - реализует интерфейс обновления, определенный в классе Observer, чтобы поддерживать согласованность с субъектом.
+*/
+
+
+/*
+Observer - наблюдатель: это общий базовый класс для всех возможных наблюдателей.
+		 - определяет интерфейс обновления для объектов, которые должны быть уведомлены об изменении субъекта;
+*/
+internal abstract class Observer
+{
+    public abstract void Update();
+}
+
+/* Subject
+- субъект: располагает информацией о своих наблюдателях. За субъектом может «следить» любое число наблюдателей;
+- предоставляет интерфейс для присоединения и отделения наблюдателей;
+*/
+internal abstract class Subject
+{
+    private readonly List<Observer> _observers = new List<Observer>();
+
+    public void Attach(Observer observer)
+    {
+        _observers.Add(observer);
+    }
+
+    public void Detach(Observer observer)
+    {
+        _observers.Remove(observer);
+    }
+
+    public void Notify()
+    {
+        foreach (var observer in _observers)
+        {
+            observer.Update();
+        }
+    }
+}
+
